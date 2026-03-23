@@ -116,10 +116,14 @@ code {
 }
 
 .nav-logo {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.25rem;
-  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo-img {
+  display: block;
+  height: 20px;
+  width: auto;
 }
 
 .nav-links {
