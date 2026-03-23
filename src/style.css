@@ -146,6 +146,17 @@ code {
   color: var(--text);
 }
 
+.star-badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.star-badge:empty {
+  display: none;
+}
+
 .nav-link svg {
   display: inline-block;
 }

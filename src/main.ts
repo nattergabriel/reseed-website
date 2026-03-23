@@ -18,17 +18,19 @@ const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 
 const TERMINAL_SCRIPT: TermLine[] = [
   { type: 'cmd', text: 'reseed init ~/skills' },
-  { type: 'out', text: 'Initialized library at ~/skills' },
+  { type: 'out', text: '✓ Library created at ~/skills' },
   { type: 'blank' },
-  { type: 'cmd', text: 'reseed install acme/agent-toolkit' },
-  { type: 'out', text: 'Fetched 3 skills from acme/agent-toolkit' },
-  { type: 'out', text: '  code-review  testing  debugging' },
+  { type: 'cmd', text: 'reseed install anthropics/skills/skills --pack anthropic' },
+  { type: 'out', text: '  + code-review' },
+  { type: 'out', text: '  + generate-tests' },
+  { type: 'out', text: '  + refactor' },
+  { type: 'out', text: '✓ 3 skills installed, pack "anthropic" created' },
   { type: 'blank' },
-  { type: 'cmd', text: 'reseed add code-review testing' },
-  { type: 'out', text: 'Added 2 skills to .agents/skills/' },
-  { type: 'blank' },
-  { type: 'cmd', text: 'reseed sync' },
-  { type: 'out', text: 'Synced 2 skills' },
+  { type: 'cmd', text: 'reseed add anthropic' },
+  { type: 'out', text: '  + code-review' },
+  { type: 'out', text: '  + generate-tests' },
+  { type: 'out', text: '  + refactor' },
+  { type: 'out', text: '✓ 3 skills added to your project' },
 ];
 
 // --- Init ---
@@ -39,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCopyButton();
   initDotGrid();
   initNavScroll();
+  initStarCount();
 });
 
 // --- Scroll Reveal ---
@@ -306,6 +309,23 @@ function initNavScroll() {
     },
     { passive: true },
   );
+}
+
+// --- Star Count ---
+
+function initStarCount() {
+  const el = document.getElementById('star-count');
+  if (!el) return;
+
+  fetch('https://api.github.com/repos/nattergabriel/reseed')
+    .then((r) => r.json())
+    .then((data) => {
+      const count = data.stargazers_count;
+      if (typeof count === 'number') {
+        el.textContent = `★ ${count}`;
+      }
+    })
+    .catch(() => {});
 }
 
 // --- Helpers ---
