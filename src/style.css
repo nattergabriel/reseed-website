@@ -542,6 +542,21 @@ code {
   border-top: 1px solid var(--border);
 }
 
+.footer-attr {
+  max-width: var(--content-w);
+  margin: 0 auto;
+  padding: 0 0 20px;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.footer-attr a {
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .footer-logo {
   font-family: var(--font-display);
   font-weight: 700;
