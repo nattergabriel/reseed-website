@@ -1,0 +1,40 @@
+# reseed
+
+> Skill manager for AI agents
+
+reseed is an open-source CLI tool that manages and distributes agent skills across projects. It maintains a central skill library and copies skills wherever they are needed, keeping everything in sync.
+
+## What it does
+
+- Maintains a central directory of reusable agent skills
+- Distributes skills into any project with a single command
+- Keeps project skills in sync when the library is updated
+- Supports installing skills and packs from GitHub repositories
+
+## Installation
+
+macOS and Linux:
+curl -fsSL https://raw.githubusercontent.com/nattergabriel/reseed/main/install.sh | sh
+
+Windows:
+Download from https://github.com/nattergabriel/reseed/releases/latest
+
+## Quick start
+
+1. Initialize a skill library: reseed init ~/skills
+2. Install skills from GitHub: reseed install anthropics/skills/skills
+3. Add skills to a project: reseed add
+4. Keep skills in sync: reseed sync
+
+## Key facts
+
+- Platform: macOS, Linux, Windows
+- Built with: Go
+- License: MIT
+- Spec: Agent Skills (https://agentskills.io)
+
+## Links
+
+- Website: https://reseed.sh
+- Documentation: https://reseed.mintlify.app
+- GitHub: https://github.com/nattergabriel/reseed
