@@ -375,7 +375,7 @@ function initStarCount() {
         el.textContent = `★ ${count}`;
       }
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 
 // --- Helpers ---
