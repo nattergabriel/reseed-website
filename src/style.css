@@ -453,7 +453,8 @@ code {
   font-size: 0.8125rem;
   line-height: 1.75;
   min-height: 280px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .term-line {

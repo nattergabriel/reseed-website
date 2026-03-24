@@ -209,16 +209,19 @@ function initCopyButton() {
 // --- Dot Grid ---
 
 function initDotGrid() {
-  const el = document.getElementById('dot-grid') as HTMLCanvasElement | null;
-  if (!el || REDUCED_MOTION || window.matchMedia('(hover: none)').matches) return;
+  const maybeEl = document.getElementById('dot-grid') as HTMLCanvasElement | null;
+  if (!maybeEl || REDUCED_MOTION || window.matchMedia('(hover: none)').matches) return;
 
-  const canvas = el;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
+  const maybeCtx = maybeEl.getContext('2d');
+  if (!maybeCtx) return;
+
+  const canvas = maybeEl;
+  const ctx = maybeCtx;
 
   const SPACING = 30;
   const DOT_SIZE = 1.2;
   const MOUSE_RADIUS = 120;
+  const MOUSE_RADIUS_SQ = MOUSE_RADIUS * MOUSE_RADIUS;
   const PUSH_FORCE = 24;
   const RETURN_SPEED = 0.06;
   const PUSH_SPEED = 0.15;
@@ -229,6 +232,8 @@ function initDotGrid() {
   let w = 0;
   let h = 0;
   let dpr = 1;
+  let active = false;
+  let animFrame = 0;
 
   function resize() {
     dpr = window.devicePixelRatio || 1;
@@ -238,7 +243,7 @@ function initDotGrid() {
     canvas.height = h * dpr;
     canvas.style.width = `${w}px`;
     canvas.style.height = `${h}px`;
-    ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     dots = [];
     const cols = Math.ceil(w / SPACING) + 1;
@@ -250,50 +255,87 @@ function initDotGrid() {
         dots.push({ ox: x, oy: y, x, y });
       }
     }
+
+    renderDots();
+  }
+
+  function renderDots() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = DOT_COLOR;
+    ctx.beginPath();
+    for (let i = 0; i < dots.length; i++) {
+      const dot = dots[i];
+      ctx.moveTo(dot.x + DOT_SIZE, dot.y);
+      ctx.arc(dot.x, dot.y, DOT_SIZE, 0, Math.PI * 2);
+    }
+    ctx.fill();
   }
 
   function draw() {
-    ctx!.clearRect(0, 0, w, h);
-    ctx!.fillStyle = DOT_COLOR;
+    let settling = false;
 
     for (let i = 0; i < dots.length; i++) {
       const dot = dots[i];
       const dx = dot.ox - mouse.x;
       const dy = dot.oy - mouse.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const distSq = dx * dx + dy * dy;
 
-      if (dist < MOUSE_RADIUS) {
+      if (distSq < MOUSE_RADIUS_SQ) {
+        const dist = Math.sqrt(distSq);
         const force = (1 - dist / MOUSE_RADIUS) * PUSH_FORCE;
         const angle = Math.atan2(dy, dx);
         dot.x += (dot.ox + Math.cos(angle) * force - dot.x) * PUSH_SPEED;
         dot.y += (dot.oy + Math.sin(angle) * force - dot.y) * PUSH_SPEED;
+        settling = true;
       } else {
-        dot.x += (dot.ox - dot.x) * RETURN_SPEED;
-        dot.y += (dot.oy - dot.y) * RETURN_SPEED;
+        const ex = dot.ox - dot.x;
+        const ey = dot.oy - dot.y;
+        if (Math.abs(ex) > 0.1 || Math.abs(ey) > 0.1) {
+          dot.x += ex * RETURN_SPEED;
+          dot.y += ey * RETURN_SPEED;
+          settling = true;
+        } else {
+          dot.x = dot.ox;
+          dot.y = dot.oy;
+        }
       }
-
-      ctx!.beginPath();
-      ctx!.arc(dot.x, dot.y, DOT_SIZE, 0, Math.PI * 2);
-      ctx!.fill();
     }
 
-    requestAnimationFrame(draw);
+    renderDots();
+
+    if (active || settling) {
+      animFrame = requestAnimationFrame(draw);
+    } else {
+      animFrame = 0;
+    }
+  }
+
+  function startLoop() {
+    if (!animFrame) {
+      animFrame = requestAnimationFrame(draw);
+    }
   }
 
   document.addEventListener('mousemove', (e) => {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
+    active = true;
+    startLoop();
   }, { passive: true });
 
   document.addEventListener('mouseleave', () => {
     mouse.x = -1000;
     mouse.y = -1000;
+    active = false;
   });
 
-  window.addEventListener('resize', resize);
+  let resizeTimer = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(resizeTimer);
+    resizeTimer = requestAnimationFrame(resize);
+  });
 
   resize();
-  draw();
 }
 
 // --- Nav Scroll ---
@@ -317,8 +359,16 @@ function initStarCount() {
   const el = document.getElementById('star-count');
   if (!el) return;
 
-  fetch('https://api.github.com/repos/nattergabriel/reseed')
-    .then((r) => r.json())
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), 5000);
+
+  fetch('https://api.github.com/repos/nattergabriel/reseed', {
+    signal: controller.signal,
+  })
+    .then((r) => {
+      if (!r.ok) throw new Error();
+      return r.json();
+    })
     .then((data) => {
       const count = data.stargazers_count;
       if (typeof count === 'number') {
