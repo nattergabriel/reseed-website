@@ -9,11 +9,11 @@ interface TermLine {
 
 // --- Constants ---
 
-const TYPING_SPEED = 45;
-const TYPING_JITTER = 30;
-const CMD_PAUSE = 500;
-const OUT_PAUSE = 120;
-const BLANK_PAUSE = 80;
+const TYPING_SPEED = 25;
+const TYPING_JITTER = 20;
+const CMD_PAUSE = 400;
+const OUT_PAUSE = 80;
+const BLANK_PAUSE = 300;
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const TERMINAL_SCRIPT: TermLine[] = [

@@ -7,6 +7,7 @@
   <title>reseed | Skill manager for AI agents</title>
   <meta name="description"
     content="A CLI tool that manages and distributes agent skills across projects. Central library, GitHub-native, always in sync.">
+  <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#f8f5f0">
   <link rel="canonical" href="https://reseed.sh/">
 
@@ -96,6 +97,57 @@
   }
   </script>
 
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use reseed to manage agent skills",
+    "description": "Set up a central skill library and distribute skills across your projects with reseed.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Initialize your library",
+        "text": "Create a central directory for all your skills. One-time setup, version it with git if you want.",
+        "itemListElement": {
+          "@type": "HowToDirection",
+          "text": "reseed init ~/skills"
+        }
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Build your library",
+        "text": "Create your own skills or install existing ones from GitHub.",
+        "itemListElement": {
+          "@type": "HowToDirection",
+          "text": "reseed install anthropics/skills/skills"
+        }
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Use in any project",
+        "text": "Pick skills or packs from your library and drop them into whatever you are working on.",
+        "itemListElement": {
+          "@type": "HowToDirection",
+          "text": "reseed add"
+        }
+      },
+      {
+        "@type": "HowToStep",
+        "position": 4,
+        "name": "Stay in sync",
+        "text": "Re-copy library skills into projects whenever you update them.",
+        "itemListElement": {
+          "@type": "HowToDirection",
+          "text": "reseed sync"
+        }
+      }
+    ]
+  }
+  </script>
+
   <link rel="icon" href="/icon.png" type="image/png">
   <link rel="apple-touch-icon" href="/icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -167,8 +219,9 @@
 
     <section class="about">
       <div class="about-inner">
-        <h2 class="section-title reveal">Why reseed</h2>
-        <div class="about-body reveal">
+        <div class="reveal">
+        <h2 class="section-title">Why reseed</h2>
+        <div class="about-body">
           <p>
             AI coding agents like Claude Code, Cursor, and Copilot get better when you give them skills.
             Custom prompts, workflows, and tool configurations tailored to your codebase. But skills live in
@@ -188,6 +241,7 @@
             <a href="https://agentskills.io" target="_blank" rel="noopener">Agent Skills</a> spec so your skills
             are portable across tools and teams.
           </p>
+        </div>
         </div>
       </div>
     </section>
