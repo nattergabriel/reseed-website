@@ -22,8 +22,8 @@ Download from https://github.com/nattergabriel/reseed/releases/latest
 ## Quick start
 
 1. Initialize a skill library: reseed init ~/skills
-2. Install skills from GitHub: reseed install anthropics/skills/skills
-3. Add skills to a project: reseed add
+2. Install skills from GitHub: reseed install anthropics/skills/skills --pack anthropic
+3. Browse your library and add skills to projects: reseed (opens interactive TUI)
 4. Keep skills in sync: reseed sync
 
 ## Key facts
